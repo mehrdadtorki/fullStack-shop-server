@@ -1,0 +1,26 @@
+{
+  "name": "fullstack-shop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mhrdd021/fullStack-shop.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mhrdd021/fullStack-shop/issues"
+  },
+  "homepage": "https://github.com/mhrdd021/fullStack-shop#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.10.3",
+    "nodemon": "^3.1.4"
+  }
+}
