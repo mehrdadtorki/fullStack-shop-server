@@ -26,13 +26,47 @@ const getSingleProduct = async (req, res) => {
 
 const addProduct = async (req, res) => {
   try {
-    const { name, quantity, unitPrice } = req.body;
-    const result = await Product.addProduct({ name, quantity, unitPrice });
-
-    res.status(201).json({ message: 'Product added successfully', result });
+    const productData = req.body;
+    const [result] = await Product.addProduct(productData);
+    res.status(201).json({
+      message: 'Product created',
+      product: {
+        id: result.insertId,
+        name: productData.name,
+        quantity: productData.quantity,
+        unitPrice: productData.unitPrice,
+      },
+    });
   } catch (error) {
-    console.error('Error adding product:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res
+      .status(500)
+      .json({ message: 'Error adding product', error: error.message });
+  }
+};
+
+const updateProduct = async (req, res) => {
+  const productId = req.params.id;
+  const productUpdatedValue = req.body;
+  try {
+    const updatedProduct = await Product.updateProduct(
+      productId,
+      productUpdatedValue
+    );
+    res
+      .status(200)
+      .json({ message: 'Product added successfully', product: updatedProduct });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating product', error });
+  }
+};
+
+const deleteProduct = async (req, res) => {
+  selectedProductId = req.params.id;
+  try {
+    await Product.deleteProduct(selectedProductId);
+    res.status(200).json({ message: 'Product deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error while deleting product', error });
   }
 };
 
@@ -40,4 +74,6 @@ module.exports = {
   getAllProducts,
   getSingleProduct,
   addProduct,
+  updateProduct,
+  deleteProduct,
 };
