@@ -15,7 +15,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Import and use the shop routes
 const ShopRoutes = require('./routes/ShopRoutes');
-app.use('/api', ShopRoutes); // Assuming routes are prefixed with '/api'
+const CustomersRoutes = require('./routes/ShopRoutes');
+
+app.use('/', ShopRoutes);
+app.use('/customers', CustomersRoutes);
 
 // Error handling middleware (optional, for better debugging)
 app.use((err, req, res, next) => {
