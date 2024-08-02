@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/mhrdd021/fullStack-shop#readme",
   "dependencies": {
+    "apollo-server": "^3.13.0",
     "body-parser": "^1.20.2",
     "mysql": "^2.18.1",
     "mysql2": "^3.10.3",

@@ -20,6 +20,20 @@ const CustomersRoutes = require('./routes/ShopRoutes');
 app.use('/', ShopRoutes);
 app.use('/customers', CustomersRoutes);
 
+// GraphQL endpoint
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema: schema,
+    graphql: true
+  })
+);
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
+});
+
 // Error handling middleware (optional, for better debugging)
 app.use((err, req, res, next) => {
   console.error(err.stack);
