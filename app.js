@@ -1,5 +1,7 @@
 const express = require('express');
 const path = require('path');
+const { graphqlHTTP } = require('express-graphql');
+const schema = require('./graphql/schema');
 
 const app = express();
 const port = 4000;
@@ -20,7 +22,20 @@ const CustomersRoutes = require('./routes/ShopRoutes');
 app.use('/', ShopRoutes);
 app.use('/customers', CustomersRoutes);
 
-// Error handling middleware (optional, for better debugging)
+// GraphQL endpoint
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema: schema,
+    graphql: true,
+  })
+);
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
+});
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something went wrong!');
