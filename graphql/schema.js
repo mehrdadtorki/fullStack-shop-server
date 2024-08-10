@@ -1,4 +1,12 @@
-const { GraphQLObjectType, GraphQLList } = require('graphql');
+const {
+  GraphQLObjectType,
+  GraphQLSchema,
+  GraphQLString,
+  GraphQLInt,
+  GraphQLList,
+  GraphQLNonNull,
+} = require('graphql');
+const Product = require('../models/Product');
 
 // Define ProductType
 const ProductType = new GraphQLObjectType({
@@ -15,6 +23,7 @@ const ProductType = new GraphQLObjectType({
   }),
 });
 
+// Define Root Query
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: {
@@ -27,11 +36,45 @@ const RootQuery = new GraphQLObjectType({
     },
     products: {
       type: new GraphQLList(ProductType),
-      resolve() {
+      resolve(parent, args) {
         return Product.getProducts();
       },
     },
   },
 });
 
-module.exports = { ProductType };
+// Define Mutation
+const Mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    addProduct: {
+      type: ProductType,
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        unitPrice: { type: new GraphQLNonNull(GraphQLInt) },
+        quantityInStock: { type: new GraphQLNonNull(GraphQLInt) },
+        discountPercentage: { type: GraphQLInt },
+        imageUrl: { type: GraphQLString },
+        priceAfterDiscount: { type: GraphQLInt },
+        description: { type: GraphQLString },
+      },
+      resolve(parent, args) {
+        const productData = {
+          name: args.name,
+          unitPrice: args.unitPrice,
+          quantityInStock: args.quantityInStock,
+          discountPercentage: args.discountPercentage,
+          imageUrl: args.imageUrl,
+          priceAfterDiscount: args.priceAfterDiscount,
+          description: args.description,
+        };
+        return Product.addProduct(productData);
+      },
+    },
+  },
+});
+
+module.exports = new GraphQLSchema({
+  query: RootQuery,
+  mutation: Mutation,
+});
