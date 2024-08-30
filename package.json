@@ -2,9 +2,9 @@
   "name": "fullstack-shop",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "src/api/server.js",
   "scripts": {
-    "start": "nodemon app.js",
+    "start": "nodemon src/api/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,9 +18,12 @@
   },
   "homepage": "https://github.com/mhrdd021/fullStack-shop#readme",
   "dependencies": {
+    "@apollo/server": "^4.11.0",
+    "@graphql-tools/merge": "^9.0.6",
     "apollo-server": "^3.13.0",
     "body-parser": "^1.20.2",
     "express-graphql": "^0.12.0",
+    "graphql": "^16.9.0",
     "mysql": "^2.18.1",
     "mysql2": "^3.10.3",
     "nodemon": "^3.1.4"
