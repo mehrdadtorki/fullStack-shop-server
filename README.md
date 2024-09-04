@@ -1,57 +1,62 @@
-برای توضیح کامل معماری پروژه و نحوه پوشه‌بندی، بیایید به چند بخش اصلی بپردازیم:
+---
 
-معماری کلی پروژه
-نقش هر لایه و فایل در پروژه
-نحوه پوشه‌بندی و ساختار فایل‌ها
-1. معماری کلی پروژه
-پروژه شما بر اساس معماری لایه‌ای (Layered Architecture) و طراحی مبتنی بر دامنه (Domain-Driven Design یا DDD) پیاده‌سازی شده است. این معماری به شما کمک می‌کند تا کد خود را به صورت منظم و مقیاس‌پذیر نگهداری کنید.
+## 📁 Project Architecture Overview
 
-لایه‌ها:
-لایه ارائه (Presentation Layer): این لایه با درخواست‌های ورودی (مثلاً APIهای GraphQL) و پاسخ‌ها سر و کار دارد.
-لایه برنامه (Application Layer): این لایه عملیات برنامه را هماهنگ می‌کند و درخواست‌ها را به لایه دامنه و زیرساخت می‌فرستد.
-لایه دامنه (Domain Layer): شامل منطق کسب‌وکار اصلی و مدل‌های دامنه است.
-لایه زیرساخت (Infrastructure Layer): با سیستم‌های خارجی مثل پایگاه داده و سرویس‌های شخص ثالث تعامل دارد.
-2. نقش هر لایه و فایل در پروژه
-لایه ارائه (Presentation Layer)
-/api/graphql/typeDefs: این پوشه حاوی تعریف‌های اسکیمای GraphQL است که نوع‌ها و عملیات‌های مختلف (Query و Mutation) را مشخص می‌کند.
+To fully explain the project architecture and folder structure, let's dive into the main sections:
 
-ProductTypeDef.js: تعریف نوع‌های مربوط به محصول.
-QueryTypeDef.js: تعریف نوع‌های مربوط به Query (مانند getAllProducts).
-MutationTypeDef.js: تعریف نوع‌های مربوط به Mutation (مانند addProduct).
-/api/graphql/resolvers: این پوشه شامل کدهای مربوط به حل‌کننده‌ها (Resolvers) است که درخواست‌های GraphQL را پردازش و به لایه برنامه ارجاع می‌دهند.
+- 🌐 **Overall Project Architecture**
+- 📂 **Role of Each Layer and File**
+- 🗂️ **Folder Structure and File Organization**
 
-ProductResolver.js: کدی که منطق پردازش Query و Mutation مرتبط با محصولات را مدیریت می‌کند.
-/api/controllers: اگر APIهای REST هم دارید، اینجا کنترلرهای HTTP قرار می‌گیرند که درخواست‌ها را پردازش و به لایه برنامه ارسال می‌کنند.
+### 🌐 Overall Project Architecture
 
-server.js: این فایل سرور Express و Apollo Server (GraphQL) را راه‌اندازی می‌کند و واسط بین درخواست‌ها و پاسخ‌ها است.
+Your project is implemented based on **Layered Architecture** and **Domain-Driven Design (DDD)**. This architecture helps you maintain your code in an organized and scalable manner.
 
-لایه برنامه (Application Layer)
-/application/services: سرویس‌های برنامه که منطق کسب‌وکار را هماهنگ و اجرا می‌کنند.
+#### 🧱 Layers:
 
-ProductService.js: سرویسی که عملیات‌های مرتبط با محصولات مانند دریافت همه محصولات یا افزودن یک محصول جدید را مدیریت می‌کند.
-/application/dto: اشیای انتقال داده (DTO) که برای انتقال داده‌ها بین لایه‌ها استفاده می‌شوند.
+1. **Presentation Layer**: Handles incoming requests (e.g., GraphQL APIs) and responses.
+2. **Application Layer**: Coordinates application operations and forwards requests to the Domain and Infrastructure layers.
+3. **Domain Layer**: Contains core business logic and domain models.
+4. **Infrastructure Layer**: Interacts with external systems like databases and third-party services.
 
-ProductDTO.js: اشیای مربوط به داده‌های محصول که بین لایه‌ها جابجا می‌شود.
-/application/use-cases: اینجا موارد استفاده (Use Cases) خاص برنامه که هر کدام نماینده یک عملیات خاص هستند، قرار می‌گیرند.
+### 📂 Role of Each Layer and File in the Project
 
-GetProductUseCase.js: مثالی از یک Use Case برای دریافت یک محصول با شناسه خاص.
-لایه دامنه (Domain Layer)
-/domain/entities: موجودیت‌های دامنه که نمایانگر مفاهیم اصلی کسب‌وکار هستند.
+#### 🧩 Presentation Layer
 
-Product.js: کلاسی که نمایانگر محصول است و شامل منطق محاسبه تخفیف و دیگر عملیات‌های مرتبط با محصول می‌شود.
-/domain/repositories: اینجا اینترفیس‌های مخازن قرار می‌گیرند که لایه زیرساخت آن‌ها را پیاده‌سازی می‌کند.
+- `/api/graphql/typeDefs`: Contains GraphQL schema definitions that specify various types and operations (Query and Mutation).
+  - `ProductTypeDef.js`: Defines types related to products.
+  - `QueryTypeDef.js`: Defines types related to Queries (e.g., `getAllProducts`).
+  - `MutationTypeDef.js`: Defines types related to Mutations (e.g., `addProduct`).
+- `/api/graphql/resolvers`: Contains resolver code that processes GraphQL requests and refers them to the Application layer.
+  - `ProductResolver.js`: Manages the logic for processing Queries and Mutations related to products.
+- `/api/controllers`: If you have REST APIs, this is where the HTTP controllers reside, processing requests and sending them to the Application layer.
+  - `server.js`: Sets up the Express server and Apollo Server (GraphQL) and acts as the interface between requests and responses.
 
-IProductRepository.js: اینترفیس مربوط به مخزن محصولات که لایه زیرساخت آن را پیاده‌سازی می‌کند.
-/domain/value-objects: اشیای ارزش (Value Objects) که نمایانگر ویژگی‌های خاص و غیرقابل تغییر هستند.
+#### 🛠️ Application Layer
 
-Price.js: نمایانگر یک شیء قیمت که عملیات‌های مرتبط با آن را مدیریت می‌کند.
-لایه زیرساخت (Infrastructure Layer)
-/infrastructure/persistence/repositories: پیاده‌سازی مخازن که به پایگاه داده یا سیستم‌های خارجی متصل می‌شوند.
+- `/application/services`: Application services that coordinate and execute business logic.
+  - `ProductService.js`: Manages operations related to products, such as retrieving all products or adding a new one.
+- `/application/dto`: Data Transfer Objects (DTOs) used for transferring data between layers.
+  - `ProductDTO.js`: Objects related to product data that are transferred between layers.
+- `/application/use-cases`: This is where specific application use cases are placed, each representing a specific operation.
+  - `GetProductUseCase.js`: An example of a use case for retrieving a product by a specific ID.
 
-ProductRepository.js: پیاده‌سازی مخزن محصولات که عملیات‌های مربوط به ذخیره و بازیابی محصولات از پایگاه داده را انجام می‌دهد.
-/infrastructure/persistence/orm: مدیریت اتصال به پایگاه داده و تنظیمات ORM (مثلاً با استفاده از Sequelize یا Mongoose).
+#### 🧠 Domain Layer
 
-db.js: فایل مربوط به تنظیمات پایگاه داده.
-/infrastructure/external-services: سرویس‌های خارجی که با سرویس‌های شخص ثالث تعامل دارند.
+- `/domain/entities`: Domain entities representing core business concepts.
+  - `Product.js`: A class representing a product, including logic for calculating discounts and other product-related operations.
+- `/domain/repositories`: Interfaces for repositories that the Infrastructure layer implements.
+  - `IProductRepository.js`: Interface for the product repository, implemented by the Infrastructure layer.
+- `/domain/value-objects`: Value Objects representing specific, immutable characteristics.
+  - `Price.js`: Represents a price object, managing related operations.
 
-ThirdPartyService.js: مثالی از یک سرویس خارجی که با APIهای شخص ثالث کار می‌کند.
+#### 🌉 Infrastructure Layer
+
+- `/infrastructure/persistence/repositories`: Repository implementations that connect to databases or external systems.
+  - `ProductRepository.js`: Implements the product repository, handling operations related to storing and retrieving products from the database.
+- `/infrastructure/persistence/orm`: Manages database connection and ORM settings (e.g., using Sequelize or Mongoose).
+  - `db.js`: The file related to database configurations.
+- `/infrastructure/external-services`: External services interacting with third-party APIs.
+  - `ThirdPartyService.js`: An example of an external service interacting with third-party APIs.
+
+---

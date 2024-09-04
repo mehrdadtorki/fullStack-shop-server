@@ -1,4 +1,4 @@
-const { ProductRepository } = require('../../infrastructure/persistence/repositories/OrderRepository.js');
+const { ProductRepository } = require('../../infrastructure/persistence/repositories/ProductRepository');
 
 class ProductService {
   static async getAllProducts() {
