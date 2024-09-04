@@ -1,10 +1,13 @@
+require('dotenv').config(); // Place this at the top of your server.js file
 const express = require('express');
 const path = require('path');
 const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@apollo/server/express4');
 const { json } = require('body-parser');
-const typeDefs = require('./graphql/typeDefs/typeDefs')
-const resolvers = require('./graphql/resolvers/resolver')
+const jwt = require('jsonwebtoken'); // Add JWT library
+const typeDefs = require('./graphql/typeDefs/typeDefs');
+const resolvers = require('./graphql/resolvers/resolver');
+const { AuthenticationError } = require('apollo-server-express'); // Import error handling
 
 const app = express();
 const port = 5000;
@@ -18,16 +21,34 @@ app.use(express.urlencoded({ extended: false }));
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Function to authenticate the user using JWT
+const getUser = (token) => {
+  try {
+    if (token) {
+      return jwt.verify(token, process.env.JWT_SECRET);
+    }
+    return null;
+  } catch (error) {
+    return null;
+  }
+};
+
 // Apollo Server setup
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  formatError: (error) => {
-    console.error('Unexpected error:', error);
-    return {
-      message: error.message,
-      statusCode: error.extensions?.code || 500
-    };
+  context: async ({ req }) => {
+    // Get the token from headers
+    const token = req.headers.authorization || '';
+    const user = getUser(token.replace('Bearer ', '')); // Remove 'Bearer ' from token if present
+
+    // If user cannot be authenticated, throw an authentication error
+    if (!user) {
+      throw new AuthenticationError('You must be logged in!');
+    }
+
+    // Add user to context
+    return { user };
   },
 });
 
@@ -35,7 +56,12 @@ const server = new ApolloServer({
 async function startServer() {
   await server.start();
   app.use('/graphql', expressMiddleware(server, {
-    context: async ({ req }) => ({ token: req.headers.token }),
+    context: async ({ req }) => {
+      // Extract the token and get the user info
+      const token = req.headers.authorization || '';
+      const user = getUser(token.replace('Bearer ', ''));
+      return { user };
+    }
   }));
 }
 
