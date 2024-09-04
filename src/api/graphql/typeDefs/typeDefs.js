@@ -27,6 +27,8 @@ const typeDefs = gql`
     last_name: String
     birth_date: String
     phone: String
+    email: String
+    password: String
     address: String
     city: String
     state: String
@@ -55,10 +57,27 @@ const typeDefs = gql`
     description: String
   }
 
+  input UserSignUp {
+    first_name: String!
+    last_name: String!
+    phone: String!
+    email: String!
+    password: String!
+    confirmationPassword: String!
+  }
+
+  input UserSignIn {
+    email: String!
+    password: String!
+  }
+
   type Mutation {
     addProduct(productItem: ProductInput!): Boolean
     updateProduct(productItem: ProductInput!): Boolean
     deleteProduct(id: Int!): Boolean
+
+    userSignUp(userSignUpItem: UserSignUp) : Boolean
+    userSignIn(userSignInItem: UserSignIn) : String!
   }
 
 `;
